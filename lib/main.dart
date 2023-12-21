@@ -4,6 +4,7 @@ import 'package:stocks/pages/financial_analysis.dart';
 import 'package:stocks/pages/home_page.dart';
 import 'package:stocks/pages/indian_indices.dart';
 import 'package:stocks/pages/market_stocks.dart';
+import 'package:stocks/pages/register_page.dart';
 import 'package:stocks/pages/stock_graph.dart';
 import 'package:stocks/utils/routes.dart';
 import 'package:flutter/services.dart';
@@ -23,13 +24,14 @@ class App extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
         fontFamily: 'Abel',
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.red,
       ),
       debugShowCheckedModeBanner: false,
       title: "STOCKS",
       initialRoute: "/",
       routes: {
-        "/": (context) => const HomePage(),
+        "/": (context) => const RegisterPage(),
+        MyRoutes.registerRoute:(context) => const RegisterPage(),
         MyRoutes.homeRoute: (context) => const HomePage(),
         MyRoutes.indianRoute: (context) => const IndianIndices(),
         MyRoutes.finRoute: (context) => const FinancialAnalysis(),

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "909278387908",
+    "project_id": "my-stocks-flutter-project",
+    "storage_bucket": "my-stocks-flutter-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:909278387908:android:5e8a4fa9e3158989f57391",
+        "android_client_info": {
+          "package_name": "com.example.stocks"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5u05UBd5rlmZZVnb2mxfgADl0KhaSGNA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
