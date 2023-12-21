@@ -3,17 +3,17 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:stocks/firebase_options.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
-  late final TextEditingController _email;
+class _LoginPageState extends State<LoginPage> {
+    late final TextEditingController _email;
   late final TextEditingController _password;
-  var userCredential;
+
   late final Future<FirebaseApp> _initialization;
 
   @override
@@ -105,28 +105,16 @@ class _RegisterPageState extends State<RegisterPage> {
                                 final email = _email.text;
                                 final password = _password.text;
                                 try {
-                                   userCredential =
-                                    await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+                                  final userCredential =
+                                    await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
                                 print(userCredential);
-                                } on FirebaseAuthException catch(e){
-                                  print(e.code);
-                                  if (e.code == 'email-already-in-use'){
-                                    print("User with that email already exists");
-                                  }
-                                  else if (e.code == 'weak-password'){
-                                    print("The password is too weak");
-                                  }
-                                  else if (e.code == 'invalid-email'){
-                                    print("Invalid email entered");
-                                  }
+                                }on FirebaseAuthException catch(e){
+                                  print(e.code == "invalid-credential");
+                                  print(e.runtimeType);
                                 }
-                                if (userCredential.isEmailVerified == false){
-                                  
-                                }
-                                
                                 
                               },
-                              child: Text("Register"),
+                              child: Text("Login"),
                             ),
                           ],
                         ),

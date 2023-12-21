@@ -6,5 +6,6 @@ class MyRoutes{
   static String graphRoute = "/g";
   static String checkRoute = "/c";
   static String registerRoute = "/register";
+  static String loginRoute = "/login";
 
 }
