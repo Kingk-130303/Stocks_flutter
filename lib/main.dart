@@ -26,7 +26,7 @@ class App extends StatelessWidget {
         fontFamily: 'Abel',
         primarySwatch: Colors.red,
       ),
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: true,
       title: "STOCKS",
       initialRoute: "/",
       routes: {
