@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:stocks/firebase_options.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -15,6 +16,8 @@ class _RegisterPageState extends State<RegisterPage> {
   late final TextEditingController _password;
   var userCredential;
   late final Future<FirebaseApp> _initialization;
+  bool _isEmailEmpty = true;
+  bool _isPasswordEmpty = true;
 
   @override
   void initState() {
@@ -57,7 +60,8 @@ class _RegisterPageState extends State<RegisterPage> {
               case ConnectionState.done:
                 return LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints constraints) {
-                    double imageSize = constraints.maxWidth > 600 ? 300.0 : 150.0;
+                    double imageSize =
+                        constraints.maxWidth > 600 ? 300.0 : 150.0;
                     double textFieldWidth = constraints.maxWidth > 600
                         ? constraints.maxWidth / 2
                         : constraints.maxWidth;
@@ -67,7 +71,8 @@ class _RegisterPageState extends State<RegisterPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            ConstrainedBox(constraints: BoxConstraints(minHeight: 100)),
+                            ConstrainedBox(
+                                constraints: BoxConstraints(minHeight: 100)),
                             Image(
                               image: AssetImage("assets/images/register.png"),
                               height: imageSize,
@@ -78,10 +83,16 @@ class _RegisterPageState extends State<RegisterPage> {
                               width: textFieldWidth,
                               child: TextField(
                                 controller: _email,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _isEmailEmpty = value.isEmpty;
+                                  });
+                                },
                                 enableSuggestions: false,
                                 keyboardType: TextInputType.emailAddress,
                                 autocorrect: false,
                                 decoration: InputDecoration(
+                                  errorText: _isEmailEmpty ? 'This field is required' : null,
                                   hintText: "Enter Your email here",
                                 ),
                               ),
@@ -94,37 +105,67 @@ class _RegisterPageState extends State<RegisterPage> {
                                 enableSuggestions: false,
                                 autocorrect: false,
                                 controller: _password,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _isPasswordEmpty = value.isEmpty;
+                                  });
+                                },
                                 decoration: InputDecoration(
+                                errorText: _isPasswordEmpty ? 'This field is required' : null,
                                   hintText: "Enter Your password here",
                                 ),
                               ),
                             ),
                             SizedBox(height: 16),
                             ElevatedButton(
-                              onPressed: () async {
+                              onPressed: (_isEmailEmpty && _isPasswordEmpty) ? null : () async {
                                 final email = _email.text;
                                 final password = _password.text;
                                 try {
-                                   userCredential =
-                                    await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
-                                print(userCredential);
-                                } on FirebaseAuthException catch(e){
+                                  userCredential = await FirebaseAuth.instance
+                                      .createUserWithEmailAndPassword(
+                                          email: email, password: password);
+                                  print(userCredential);
+                                } on FirebaseAuthException catch (e) {
                                   print(e.code);
-                                  if (e.code == 'email-already-in-use'){
+                                  if (e.code == 'email-already-in-use') {
+                                    Fluttertoast.showToast(
+                                      msg: "Invalid credentials",
+                                      toastLength: Toast
+                                          .LENGTH_LONG, // Duration of the toast
+                                      gravity:
+                                          ToastGravity.TOP, // Toast position
+                                      backgroundColor: Color.fromARGB(255, 199, 36, 11), // Background color of the toast
+                                      textColor: Colors
+                                          .white, // Text color of the toast
+                                    );
                                     print("User with that email already exists");
-                                  }
-                                  else if (e.code == 'weak-password'){
+                                  } else if (e.code == 'weak-password') {
+                                    Fluttertoast.showToast(
+                                      msg: "Password's too weak",
+                                      toastLength: Toast
+                                          .LENGTH_LONG, // Duration of the toast
+                                      gravity:
+                                          ToastGravity.TOP, // Toast position
+                                      backgroundColor: Color.fromARGB(255, 199, 36, 11), // Background color of the toast
+                                      textColor: Colors
+                                          .white, // Text color of the toast
+                                    );
                                     print("The password is too weak");
-                                  }
-                                  else if (e.code == 'invalid-email'){
+                                  } else if (e.code == 'invalid-email') {
                                     print("Invalid email entered");
+                                    Fluttertoast.showToast(
+                                      msg: "Invalid email",
+                                      toastLength: Toast
+                                          .LENGTH_LONG, // Duration of the toast
+                                      gravity:
+                                          ToastGravity.TOP, // Toast position
+                                      backgroundColor: Color.fromARGB(255, 199, 36, 11), // Background color of the toast
+                                      textColor: Colors
+                                          .white, // Text color of the toast
+                                    );
                                   }
                                 }
-                                if (userCredential.isEmailVerified == false){
-                                  
-                                }
-                                
-                                
                               },
                               child: Text("Register"),
                             ),
@@ -134,10 +175,11 @@ class _RegisterPageState extends State<RegisterPage> {
                     );
                   },
                 );
-              
+
               default:
                 return Center(
-                  child: Text("Unhandled ConnectionState: ${snapshot.connectionState}"),
+                  child: Text(
+                      "Unhandled ConnectionState: ${snapshot.connectionState}"),
                 );
             }
           },
