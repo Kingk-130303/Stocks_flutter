@@ -18,6 +18,7 @@ class _RegisterPageState extends State<RegisterPage> {
   late final Future<FirebaseApp> _initialization;
   bool _isEmailEmpty = true;
   bool _isPasswordEmpty = true;
+  bool _isButtonPressed = false;
 
   @override
   void initState() {
@@ -92,7 +93,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 keyboardType: TextInputType.emailAddress,
                                 autocorrect: false,
                                 decoration: InputDecoration(
-                                  errorText: _isEmailEmpty ? 'This field is required' : null,
+                                  errorText: (_isButtonPressed && _isEmailEmpty) ? 'This field is required' : null,
                                   hintText: "Enter Your email here",
                                 ),
                               ),
@@ -111,7 +112,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   });
                                 },
                                 decoration: InputDecoration(
-                                errorText: _isPasswordEmpty ? 'This field is required' : null,
+                                errorText: (_isButtonPressed && _isPasswordEmpty) ? 'This field is required' : null,
                                   hintText: "Enter Your password here",
                                 ),
                               ),
@@ -119,6 +120,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             SizedBox(height: 16),
                             ElevatedButton(
                               onPressed: (_isEmailEmpty && _isPasswordEmpty) ? null : () async {
+                                _isButtonPressed = true;
                                 final email = _email.text;
                                 final password = _password.text;
                                 try {
