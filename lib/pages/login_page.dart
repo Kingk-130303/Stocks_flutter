@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:stocks/firebase_options.dart';
+import 'package:stocks/pages/home_page.dart';
+import 'package:stocks/pages/register_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -11,7 +14,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-    late final TextEditingController _email;
+  late final TextEditingController _email;
   late final TextEditingController _password;
 
   late final Future<FirebaseApp> _initialization;
@@ -57,7 +60,8 @@ class _LoginPageState extends State<LoginPage> {
               case ConnectionState.done:
                 return LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints constraints) {
-                    double imageSize = constraints.maxWidth > 600 ? 300.0 : 150.0;
+                    double imageSize =
+                        constraints.maxWidth > 600 ? 300.0 : 150.0;
                     double textFieldWidth = constraints.maxWidth > 600
                         ? constraints.maxWidth / 2
                         : constraints.maxWidth;
@@ -67,7 +71,8 @@ class _LoginPageState extends State<LoginPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            ConstrainedBox(constraints: BoxConstraints(minHeight: 100)),
+                            ConstrainedBox(
+                                constraints: BoxConstraints(minHeight: 100)),
                             Image(
                               image: AssetImage("assets/images/register.png"),
                               height: imageSize,
@@ -105,16 +110,90 @@ class _LoginPageState extends State<LoginPage> {
                                 final email = _email.text;
                                 final password = _password.text;
                                 try {
-                                  final userCredential =
-                                    await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
-                                print(userCredential);
-                                }on FirebaseAuthException catch(e){
-                                  print(e.code == "invalid-credential");
-                                  print(e.runtimeType);
+                                  final userCredential = await FirebaseAuth
+                                      .instance
+                                      .signInWithEmailAndPassword(
+                                          email: email, password: password);
+                                  print(userCredential);
+                                  Fluttertoast.showToast(
+                                    msg: "Login successful",
+                                    toastLength: Toast
+                                        .LENGTH_LONG, // Duration of the toast
+                                    gravity: ToastGravity.TOP, // Toast position
+                                    backgroundColor: Color.fromARGB(
+                                        255,
+                                        11,
+                                        199,
+                                        39), // Background color of the toast
+                                    textColor:
+                                        Colors.white, // Text color of the toast
+                                  );
+                                  await Future.delayed(Duration(seconds: 2));
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            HomePage()), // Replace LoginPage with the actual login page
+                                  );
+                                } on FirebaseAuthException catch (e) {
+                                  print(e.code);
+                                  if (e.code == "invalid-credential"){
+                                    Fluttertoast.showToast(
+                                                  msg: "Invalid credential",
+                                                  toastLength: Toast
+                                                      .LENGTH_LONG, // Duration of the toast
+                                                  gravity: ToastGravity
+                                                      .TOP, // Toast position
+                                                  backgroundColor: Color.fromARGB(
+                                                      255,
+                                                      199,
+                                                      36,
+                                                      11), // Background color of the toast
+                                                  textColor: Colors
+                                                      .white, // Text color of the toast
+                                                );
+                                  }
+                                  else if (e.code ==
+                                                  'channel-error') {
+                                                Fluttertoast.showToast(
+                                                  msg: "Both fields are required",
+                                                  toastLength: Toast
+                                                      .LENGTH_LONG, // Duration of the toast
+                                                  gravity: ToastGravity
+                                                      .TOP, // Toast position
+                                                  backgroundColor: Color.fromARGB(
+                                                      255,
+                                                      199,
+                                                      36,
+                                                      11), // Background color of the toast
+                                                  textColor: Colors
+                                                      .white, // Text color of the toast
+                                                );
+                                                  }
+                                  //print(e.runtimeType);
                                 }
-                                
                               },
                               child: Text("Login"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                // Navigate to the login page when the button is pressed
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          RegisterPage()), // Replace LoginPage with the actual login page
+                                );
+                              },
+                              child: Text(
+                                "A new user? Register",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: const Color.fromARGB(255, 23, 23,
+                                      24), // Customize the color as needed
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -122,10 +201,11 @@ class _LoginPageState extends State<LoginPage> {
                     );
                   },
                 );
-              
+
               default:
                 return Center(
-                  child: Text("Unhandled ConnectionState: ${snapshot.connectionState}"),
+                  child: Text(
+                      "Unhandled ConnectionState: ${snapshot.connectionState}"),
                 );
             }
           },
