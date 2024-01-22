@@ -5,6 +5,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:stocks/firebase_options.dart';
 import 'package:stocks/pages/home_page.dart';
 import 'package:stocks/pages/register_page.dart';
+import 'package:stocks/utils/secure_storage_helper.dart';
+import 'package:stocks/utils/auth_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,7 +18,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   late final TextEditingController _email;
   late final TextEditingController _password;
-
+  AuthService _authService = AuthService();
   late final Future<FirebaseApp> _initialization;
 
   @override
@@ -115,6 +117,8 @@ class _LoginPageState extends State<LoginPage> {
                                       .signInWithEmailAndPassword(
                                           email: email, password: password);
                                   print(userCredential);
+                                  await _authService.SaveToken(email, password);
+                                  print("saved token");
                                   Fluttertoast.showToast(
                                     msg: "Login successful",
                                     toastLength: Toast
@@ -153,6 +157,24 @@ class _LoginPageState extends State<LoginPage> {
                                                       .white, // Text color of the toast
                                                 );
                                   }
+                                  else if (e.code ==
+                                                  'invalid-email') {
+                                                print("Invalid email entered");
+                                                Fluttertoast.showToast(
+                                                  msg: "Invalid email",
+                                                  toastLength: Toast
+                                                      .LENGTH_LONG, // Duration of the toast
+                                                  gravity: ToastGravity
+                                                      .TOP, // Toast position
+                                                  backgroundColor: Color.fromARGB(
+                                                      255,
+                                                      199,
+                                                      36,
+                                                      11), // Background color of the toast
+                                                  textColor: Colors
+                                                      .white, // Text color of the toast
+                                                );
+                                              }
                                   else if (e.code ==
                                                   'channel-error') {
                                                 Fluttertoast.showToast(

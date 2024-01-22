@@ -11,7 +11,9 @@ import 'package:stocks/pages/register_page.dart';
 import 'package:stocks/pages/stock_graph.dart';
 import 'package:stocks/utils/routes.dart';
 import 'package:flutter/services.dart';
+import 'package:stocks/utils/secure_storage_helper.dart';
 
+secureStorageHelper _secureStorageHelper = secureStorageHelper();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([
@@ -33,7 +35,7 @@ class App extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: true,
       title: "STOCKS",
-      home: const RegisterPage(),
+      home: const AppLoader(),
       routes: {
         MyRoutes.registerRoute: (context) => const RegisterPage(),
         MyRoutes.loginRoute: (context) => const LoginPage(),
@@ -54,20 +56,57 @@ class AppLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform),
+      future: _initializeApp(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           print("Firebase is initialized");
-          return const RegisterPage();
+          return FutureBuilder(
+            future: _checkAuthStatus(),
+            builder: (context, authSnapshot) {
+              if (authSnapshot.connectionState == ConnectionState.done) {
+                String? authString = authSnapshot.data as String?;
+                print(authString);
+                if (authString == "home") {
+                  return const HomePage();
+                } else if (authString == "login") {
+                  return const LoginPage();
+                } else {
+                  return const RegisterPage();
+                }
+              } else {
+                return  LoadingScreen();
+              }
+            },
+          );
         } else if (snapshot.hasError) {
-          return ErrorApp();
+          return  ErrorApp();
         } else {
-          return LoadingScreen();
+          return  LoadingScreen();
         }
       },
     );
   }
+
+  Future<void> _initializeApp() async {
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  }
+
+  Future<String> _checkAuthStatus() async {
+    String? token = await _secureStorageHelper.getAuthToken();
+    DateTime? expiryTime = await _secureStorageHelper.getAuthTokenExpiry();
+    if (token != null && expiryTime != null) {
+      if (expiryTime.isAfter(DateTime.now())) {
+        return "home";
+      } else {
+        await _secureStorageHelper.deleteAuthToken();
+        return "login";
+      }
+    } else {
+      return "register";
+    }
+  }
 }
+
 
 class ErrorApp extends StatelessWidget {
   @override
