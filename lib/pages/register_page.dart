@@ -202,7 +202,24 @@ class _RegisterPageState extends State<RegisterPage> {
                                                 );
                                                 print(
                                                     "User with that email already exists");
-                                              } else if (e.code ==
+                                              } 
+                                              else if (e.code == 'network-request-failed'){
+                                                Fluttertoast.showToast(
+                                                  msg: "No internet connection",
+                                                  toastLength: Toast
+                                                      .LENGTH_LONG, // Duration of the toast
+                                                  gravity: ToastGravity
+                                                      .TOP, // Toast position
+                                                  backgroundColor: Color.fromARGB(
+                                                      255,
+                                                      199,
+                                                      36,
+                                                      11), // Background color of the toast
+                                                  textColor: Colors
+                                                      .white, // Text color of the toast
+                                                );
+                                              }
+                                              else if (e.code ==
                                                   'channel-error') {
                                                 Fluttertoast.showToast(
                                                   msg: "Incomplete credentials",

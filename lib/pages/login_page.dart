@@ -157,6 +157,22 @@ class _LoginPageState extends State<LoginPage> {
                                                       .white, // Text color of the toast
                                                 );
                                   }
+                                  else if (e.code == 'network-request-failed'){
+                                                Fluttertoast.showToast(
+                                                  msg: "No internet connection",
+                                                  toastLength: Toast
+                                                      .LENGTH_LONG, // Duration of the toast
+                                                  gravity: ToastGravity
+                                                      .TOP, // Toast position
+                                                  backgroundColor: Color.fromARGB(
+                                                      255,
+                                                      199,
+                                                      36,
+                                                      11), // Background color of the toast
+                                                  textColor: Colors
+                                                      .white, // Text color of the toast
+                                                );
+                                              }
                                   else if (e.code ==
                                                   'invalid-email') {
                                                 print("Invalid email entered");
