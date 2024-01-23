@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:stocks/firebase_options.dart';
+import 'package:stocks/pages/email_verification.dart';
 import 'package:stocks/pages/home_page.dart';
 import 'package:stocks/pages/register_page.dart';
 import 'package:stocks/utils/secure_storage_helper.dart';
@@ -112,12 +113,15 @@ class _LoginPageState extends State<LoginPage> {
                                 final email = _email.text;
                                 final password = _password.text;
                                 try {
+
                                   final userCredential = await FirebaseAuth
                                       .instance
                                       .signInWithEmailAndPassword(
                                           email: email, password: password);
                                   print(userCredential);
-                                  await _authService.SaveToken(email, password);
+                                  if (userCredential.user?.emailVerified==true){
+                                    
+                                    await _authService.SaveToken(email, password);
                                   print("saved token");
                                   Fluttertoast.showToast(
                                     msg: "Login successful",
@@ -139,6 +143,30 @@ class _LoginPageState extends State<LoginPage> {
                                         builder: (context) =>
                                             HomePage()), // Replace LoginPage with the actual login page
                                   );
+                                  }
+                                  else{
+                                    Fluttertoast.showToast(
+                                    msg: "Please verify your email before logging in",
+                                    toastLength: Toast
+                                        .LENGTH_LONG, // Duration of the toast
+                                    gravity: ToastGravity.TOP, // Toast position
+                                    backgroundColor: Color.fromARGB(
+                                        255,
+                                        11,
+                                        199,
+                                        39), // Background color of the toast
+                                    textColor:
+                                        Colors.white, // Text color of the toast
+                                  );
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            EmailVerificationScreen()), // Replace LoginPage with the actual login page
+                                  );
+                                  }
+                                  
+                                  
                                 } on FirebaseAuthException catch (e) {
                                   print(e.code);
                                   if (e.code == "invalid-credential"){

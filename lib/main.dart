@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:stocks/firebase_options.dart';
@@ -91,11 +92,37 @@ class AppLoader extends StatelessWidget {
     await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   }
 
+  Future<bool> isEmailRegistered(String email) async {
+    try {
+      UserCredential? userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: 'aDummyPassword', // Use a dummy password for checking existence, you won't actually create a user
+      );
+
+      // User creation successful, email doesn't exist
+      await userCredential.user?.delete(); // Delete the dummy user
+
+      return false;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        // User creation failed, email already exists
+        return true;
+      } else {
+        // Handle other exceptions
+        return false;
+      }
+    }
+  }
+
   Future<String> _checkAuthStatus() async {
     String? token = await _secureStorageHelper.getAuthToken();
     DateTime? expiryTime = await _secureStorageHelper.getAuthTokenExpiry();
     if (token != null && expiryTime != null) {
-      if (expiryTime.isAfter(DateTime.now())) {
+      print(token);
+      String email = _secureStorageHelper.extractEmailFromToken(token);
+      bool isRegistered = await isEmailRegistered(email);
+      // print(isRegistered);
+      if (expiryTime.isAfter(DateTime.now()) && isRegistered) {
         return "home";
       } else {
         await _secureStorageHelper.deleteAuthToken();

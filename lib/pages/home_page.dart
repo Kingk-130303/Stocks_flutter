@@ -297,10 +297,7 @@ class HomePage extends StatelessWidget {
                     color: Color.fromARGB(255, 35, 102, 23),
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadius.circular(30),
-                      image: const DecorationImage(
-                          image: NetworkImage(
-                              "https://media.istockphoto.com/vectors/question-marks-texture-vector-black-color-pattern-from-scattered-vector-id1193226157"),
-                          fit: BoxFit.cover)),
+                      ),
                   height: 150,
                   width: 384,
                   //color: Color.fromARGB(255, 144, 182, 239),

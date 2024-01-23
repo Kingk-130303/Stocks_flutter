@@ -18,4 +18,17 @@ class secureStorageHelper{
     await _storage.delete(key: 'authToken');
     await _storage.delete(key: 'authTokenExpiry');
   }
+  String extractEmailFromToken(String token) {
+  // Split the token string using ':' as the delimiter
+  List<String> tokenParts = token.split(':');
+
+  // The first part of the token should be the email
+  if (tokenParts.length > 0) {
+    return tokenParts[0];
+  } else {
+    // Handle the case where the token format is incorrect
+    return ''; // or throw an exception, depending on your error handling strategy
+  }
+}
+
 }
