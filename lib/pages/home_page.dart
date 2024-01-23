@@ -1,14 +1,17 @@
 // ignore_for_file: sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
+import 'package:stocks/utils/auth_service.dart';
 import 'package:stocks/utils/routes.dart';
 import '../widgets/drawer.dart';
+
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    AuthService _authService = AuthService();
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -68,6 +71,12 @@ class HomePage extends StatelessWidget {
                   )),
                 ),
                 const SizedBox(height: 20),
+                ElevatedButton(onPressed:() async{
+                  await _authService.logoutUser();
+                  Navigator.pushReplacementNamed(context, MyRoutes.loginRoute);
+
+                }, child: Text("Logout")),
+                const SizedBox(height: 20),
                 Container(
                   decoration: BoxDecoration(
                       shape: BoxShape.rectangle,
@@ -85,7 +94,7 @@ class HomePage extends StatelessWidget {
                         child: Image(
                           image: AssetImage('assets/images/title.jpg'),
                           height: 250,
-                          width: 150,
+                          width: 140,
                         ),
                       ),
                       const SizedBox(
@@ -140,7 +149,7 @@ class HomePage extends StatelessWidget {
                           image: AssetImage(
                               'assets/images/financial_analysis.jpg'),
                           height: 250,
-                          width: 150,
+                          width: 140,
                         ),
                       ),
                       const SizedBox(
@@ -192,7 +201,7 @@ class HomePage extends StatelessWidget {
                         child: Image(
                           image: AssetImage('assets/images/market_terms.jpg'),
                           height: 250,
-                          width: 150,
+                          width: 140,
                         ),
                       ),
                       const SizedBox(
@@ -246,7 +255,7 @@ class HomePage extends StatelessWidget {
                         child: Image(
                           image: AssetImage('assets/images/stocks_graph.jpg'),
                           height: 250,
-                          width: 150,
+                          width: 140,
                         ),
                       ),
                       const SizedBox(
@@ -283,7 +292,9 @@ class HomePage extends StatelessWidget {
                   height: 20,
                 ),
                 Container(
+          
                   decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 35, 102, 23),
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadius.circular(30),
                       image: const DecorationImage(
@@ -300,7 +311,7 @@ class HomePage extends StatelessWidget {
                         child: Image(
                           image: AssetImage('assets/images/daily_checks.jpg'),
                           height: 250,
-                          width: 150,
+                          width: 140,
                         ),
                       ),
                       const SizedBox(
