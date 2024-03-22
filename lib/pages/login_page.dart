@@ -159,7 +159,7 @@ class _LoginPageState extends State<LoginPage> {
                                         Colors.white, // Text color of the toast
                                   );
                                   await Future.delayed(Duration(seconds: 2));
-                                  Navigator.push(
+                                  Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
@@ -180,7 +180,7 @@ class _LoginPageState extends State<LoginPage> {
                                     textColor:
                                         Colors.white, // Text color of the toast
                                   );
-                                  Navigator.push(
+                                  Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>

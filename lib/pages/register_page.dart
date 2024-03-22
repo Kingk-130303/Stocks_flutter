@@ -194,7 +194,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                               await Future.delayed(
                                                   Duration(seconds: 2));
                                               if (userCredential.user != null) {
-                                                Navigator.push(
+                                                Navigator.pushReplacement(
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (ctx) =>
@@ -305,7 +305,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             TextButton(
                               onPressed: () {
                                 // Navigate to the login page when the button is pressed
-                                Navigator.push(
+                                Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
